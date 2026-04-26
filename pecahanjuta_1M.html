@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pecahan Juta Malaysia</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{min-height:100vh;background:linear-gradient(#ffe8b8,#fff6df);color:#2b1708;padding:24px}
+h1{font-size:42px;margin-bottom:8px;text-align:center}
+.sub{font-size:22px;font-weight:bold;text-align:center;margin-bottom:20px}
+.hero{background:linear-gradient(135deg,#ffb347,#ffcc70);border:5px solid #a8642a;border-radius:28px;padding:24px;text-align:center;box-shadow:0 10px 0 #7c4319;margin-bottom:24px}
+.panel{background:#fffaf0;border:4px solid #a8642a;border-radius:24px;padding:24px;margin-top:20px;box-shadow:0 8px 0 #7c4319}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+label{font-size:20px;font-weight:bold;display:block;margin-top:10px}
+input,select{width:100%;padding:14px 16px;border:3px solid #c58b4d;border-radius:16px;font-size:20px;margin:8px 0 12px;background:white}
+.btn{border:none;border-radius:16px;padding:14px 22px;background:linear-gradient(#63c77f,#2fa052);color:white;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 5px 0 #1f6d38;margin-top:10px}
+.btn.blue{background:linear-gradient(#5b6ee1,#3546ad);box-shadow:0 5px 0 #222b72}
+.btn.red{background:linear-gradient(#ff6b4a,#e33d25);box-shadow:0 5px 0 #9b2315}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:20px}
+.box{background:#fffaf0;border:3px solid #a8642a;border-radius:16px;padding:12px;text-align:center;font-size:19px;font-weight:bold}
+.question{background:linear-gradient(#ffb347,#ffcc70);border-radius:25px;padding:25px;text-align:center;margin-bottom:20px;box-shadow:0 6px 0 #87511e}
+.question small{font-size:20px;font-weight:bold}
+.question div{font-size:56px;font-weight:bold;margin-top:12px}
+.frac{display:inline-block;text-align:center;vertical-align:middle;font-weight:bold;line-height:1}
+.frac .top{display:block;border-bottom:5px solid #2b1708;padding:0 14px 6px}
+.frac .bottom{display:block;padding-top:6px}
+.answer-grid{display:grid;grid-template-columns:repeat(5,160px);gap:22px;justify-content:center;align-items:center;margin-top:25px}
+.answer-card{border-radius:50%;border:5px solid #9b5a23;background:radial-gradient(circle,#fff7df,#f7d48b,#c77932);width:160px;height:105px;font-size:22px;font-weight:bold;cursor:pointer;transition:.35s}
+.answer-card.hide{opacity:0;transform:scale(0);pointer-events:none}
+.answer-card.wrong{background:red;color:white;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-8px)}}
+.message{text-align:center;font-size:22px;font-weight:bold;margin:10px;min-height:30px}
+.finish{text-align:center}
+.finish-score{font-size:50px;color:#d93a22;font-weight:bold}
+table{width:100%;border-collapse:collapse;background:white;border-radius:18px;overflow:hidden;margin-top:14px}
+th,td{border:1px solid #e2c69a;padding:10px;text-align:center;font-size:17px}
+th{background:#ffcc70;font-weight:bold}
+.rank-note{font-size:16px;color:#6d4c2c;margin-top:10px;line-height:1.4}
+.highlight{background:#e5ffe8!important;font-weight:bold}
+.hidden{display:none}
+@media(max-width:1050px){.grid-2{grid-template-columns:1fr}.answer-grid{grid-template-columns:repeat(3,160px)}}
+@media(max-width:560px){body{padding:14px}h1{font-size:32px}.sub{font-size:18px}.answer-grid{grid-template-columns:repeat(2,145px);gap:16px}.answer-card{width:145px;height:95px;font-size:19px}.question div{font-size:42px}th,td{font-size:13px;padding:7px}}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+<h1>Pecahan Juta</h1>
+<p class="sub">Padankan pecahan juta dengan nombor bulat yang betul.</p>
+</div>
+
+<section id="loginScreen" class="panel">
+<h2>Maklumat Murid</h2>
+<label>Nama murid</label>
+<input id="studentName" placeholder="Contoh: AHMAD HAFIZ BIN MOHD SUHAIMI">
+
+<label>Nama sekolah</label>
+<input id="schoolName" placeholder="Contoh: SK KAMPUNG GEMILANG">
+
+<label>Negeri</label>
+<select id="stateName">
+<option value="">Pilih negeri</option>
+<option>Johor</option>
+<option>Kedah</option>
+<option>Kelantan</option>
+<option>Melaka</option>
+<option>Negeri Sembilan</option>
+<option>Pahang</option>
+<option>Perak</option>
+<option>Perlis</option>
+<option>Pulau Pinang</option>
+<option>Sabah</option>
+<option>Sarawak</option>
+<option>Selangor</option>
+<option>Terengganu</option>
+<option>Wilayah Persekutuan Kuala Lumpur</option>
+<option>Wilayah Persekutuan Labuan</option>
+<option>Wilayah Persekutuan Putrajaya</option>
+</select>
+
+<button class="btn" onclick="startGame()">Mula Permainan</button>
+</section>
+
+<section id="gameScreen" class="hidden">
+<div class="status">
+<div class="box">Nama: <span id="nameBox">-</span></div>
+<div class="box">Sekolah: <span id="schoolBox">-</span></div>
+<div class="box">Negeri: <span id="stateBox">-</span></div>
+<div class="box">Skor: <span id="scoreBox">0</span>/15</div>
+<div class="box">Masa: <span id="timeBox">0</span>s</div>
+</div>
+
+<div class="question">
+<small>Soalan <span id="qNo">1</span>/15</small>
+<div id="questionText"></div>
+</div>
+
+<div id="message" class="message"></div>
+<div id="answerGrid" class="answer-grid"></div>
+</section>
+
+<section id="finishScreen" class="panel finish hidden">
+<h1>🎉 Tahniah!</h1>
+<p class="sub">Skor anda telah direkodkan dalam ranking Malaysia.</p>
+<div class="finish-score"><span id="finalScore"></span>/15</div>
+<h2>Masa: <span id="finalTime"></span>s</h2>
+<button class="btn blue" onclick="playAgain()">Main Lagi</button>
+</section>
+
+<section id="rankingPanel" class="panel">
+<h2>🏆 Ranking Malaysia</h2>
+<p class="rank-note">Ranking disusun mengikut skor tertinggi, kemudian masa terpantas. Setiap murid hanya menyimpan rekod terbaik sahaja.</p>
+<button class="btn blue" onclick="loadRanking()">Refresh Ranking</button>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Nama</th>
+<th>Sekolah</th>
+<th>Negeri</th>
+<th>Skor</th>
+<th>Masa</th>
+<th>Tarikh</th>
+</tr>
+</thead>
+<tbody id="rankingBody">
+<tr><td colspan="7">Ranking sedang dimuatkan...</td></tr>
+</tbody>
+</table>
+</section>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* GANTI BAHAGIAN INI DENGAN FIREBASE CONFIG CIKGU */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY_DI_SINI",
+  authDomain: "PASTE_AUTH_DOMAIN_DI_SINI",
+  projectId: "PASTE_PROJECT_ID_DI_SINI",
+  storageBucket: "PASTE_STORAGE_BUCKET_DI_SINI",
+  messagingSenderId: "PASTE_MESSAGING_SENDER_ID_DI_SINI",
+  appId: "PASTE_APP_ID_DI_SINI",
+  measurementId: "PASTE_MEASUREMENT_ID_DI_SINI"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+const questions=[
+{q:"1/2 juta",a:500000},{q:"1/4 juta",a:250000},{q:"3/4 juta",a:750000},
+{q:"1/5 juta",a:200000},{q:"2/5 juta",a:400000},{q:"3/5 juta",a:600000},
+{q:"4/5 juta",a:800000},{q:"1/8 juta",a:125000},{q:"3/8 juta",a:375000},
+{q:"5/8 juta",a:625000},{q:"7/8 juta",a:875000},{q:"1/10 juta",a:100000},
+{q:"3/10 juta",a:300000},{q:"7/10 juta",a:700000},{q:"9/10 juta",a:900000}
+];
+
+let studentName="", schoolName="", stateName="";
+let recordId="";
+let qList=[],current=0,score=0,startTime,timer;
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTone(freq,duration,type="sine"){
+const osc=audioCtx.createOscillator();
+const gain=audioCtx.createGain();
+osc.type=type;
+osc.frequency.value=freq;
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+gain.gain.setValueAtTime(0.12,audioCtx.currentTime);
+gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+duration);
+osc.start();
+osc.stop(audioCtx.currentTime+duration);
+}
+
+function playCorrect(){playTone(660,0.12);setTimeout(()=>playTone(880,0.14),100)}
+function playWrong(){playTone(180,0.18,"square")}
+
+function shuffle(a){
+const c=[...a];
+for(let i=c.length-1;i>0;i--){
+const j=Math.floor(Math.random()*(i+1));
+[c[i],c[j]]=[c[j],c[i]];
+}
+return c;
+}
+
+function formatNumber(n){return n.toLocaleString("ms-MY").replace(/,/g," ")}
+function cleanText(t){return t.trim().replace(/\s+/g," ").toUpperCase()}
+function makeId(name,school,state){
+return (name+"_"+school+"_"+state).toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");
+}
+
+function startGame(){
+studentName=cleanText(document.getElementById("studentName").value);
+schoolName=cleanText(document.getElementById("schoolName").value);
+stateName=document.getElementById("stateName").value;
+
+if(!studentName)return alert("Sila tulis nama murid.");
+if(!schoolName)return alert("Sila tulis nama sekolah.");
+if(!stateName)return alert("Sila pilih negeri.");
+
+recordId=makeId(studentName,schoolName,stateName);
+audioCtx.resume();
+
+qList=shuffle(questions);
+current=0;
+score=0;
+startTime=Date.now();
+
+loginScreen.classList.add("hidden");
+finishScreen.classList.add("hidden");
+gameScreen.classList.remove("hidden");
+
+nameBox.textContent=studentName;
+schoolBox.textContent=schoolName;
+stateBox.textContent=stateName;
+scoreBox.textContent=score;
+message.textContent="";
+
+buildAnswers();
+showQ();
+clearInterval(timer);
+timer=setInterval(()=>timeBox.textContent=((Date.now()-startTime)/1000).toFixed(1),100);
+}
+
+function buildAnswers(){
+answerGrid.innerHTML="";
+shuffle(questions.map(x=>x.a)).forEach(v=>{
+let b=document.createElement("button");
+b.className="answer-card";
+b.textContent=formatNumber(v);
+b.onclick=()=>choose(v,b);
+answerGrid.appendChild(b);
+});
+}
+
+function makeFraction(text){
+const first=text.split(" ")[0];
+const word=text.split(" ").slice(1).join(" ");
+const parts=first.split("/");
+return `<span class="frac"><span class="top">${parts[0]}</span><span class="bottom">${parts[1]}</span></span><span> ${word}</span>`;
+}
+
+function showQ(){
+qNo.textContent=current+1;
+questionText.innerHTML=makeFraction(qList[current].q);
+}
+
+function choose(v,b){
+if(v===qList[current].a){
+playCorrect();
+b.classList.add("hide");
+score++;
+current++;
+scoreBox.textContent=score;
+message.style.color="#249447";
+message.textContent="Betul!";
+setTimeout(()=>{
+if(current<15){message.textContent="";showQ()}else{finish()}
+},420);
+}else{
+playWrong();
+b.classList.add("wrong");
+message.style.color="#d93a22";
+message.textContent="Cuba lagi.";
+setTimeout(()=>b.classList.remove("wrong"),300);
+}
+}
+
+async function finish(){
+clearInterval(timer);
+let time=Number(((Date.now()-startTime)/1000).toFixed(1));
+
+const recordRef=doc(db,"malaysiaScores",recordId);
+const oldRecord=await getDoc(recordRef);
+
+let shouldUpdate=false;
+if(!oldRecord.exists()){
+shouldUpdate=true;
+}else{
+const old=oldRecord.data();
+if(score>old.score)shouldUpdate=true;
+else if(score===old.score && time<old.time)shouldUpdate=true;
+}
+
+if(shouldUpdate){
+await setDoc(recordRef,{
+name:studentName,
+school:schoolName,
+state:stateName,
+score:score,
+time:time,
+createdAt: oldRecord.exists() ? oldRecord.data().createdAt : serverTimestamp(),
+updatedAt: serverTimestamp()
+});
+}
+
+gameScreen.classList.add("hidden");
+finishScreen.classList.remove("hidden");
+finalScore.textContent=score;
+finalTime.textContent=time;
+await loadRanking();
+}
+
+function playAgain(){
+finishScreen.classList.add("hidden");
+loginScreen.classList.remove("hidden");
+}
+
+async function loadRanking(){
+try{
+const snap=await getDocs(collection(db,"malaysiaScores"));
+let arr=[];
+snap.forEach(d=>arr.push({id:d.id,...d.data()}));
+arr.sort((a,b)=>(b.score-a.score)||(a.time-b.time));
+
+rankingBody.innerHTML="";
+if(arr.length===0){
+rankingBody.innerHTML="<tr><td colspan='7'>Belum ada ranking.</td></tr>";
+return;
+}
+
+arr.slice(0,100).forEach((r,i)=>{
+const dateField=r.updatedAt||r.createdAt;
+const date=dateField?.toDate?dateField.toDate().toLocaleString("ms-MY"):"-";
+const tr=document.createElement("tr");
+if(r.id===recordId)tr.className="highlight";
+tr.innerHTML=`
+<td>${i+1}</td>
+<td>${r.name}</td>
+<td>${r.school}</td>
+<td>${r.state}</td>
+<td>${r.score}/15</td>
+<td>${r.time}s</td>
+<td>${date}</td>`;
+rankingBody.appendChild(tr);
+});
+}catch(error){
+rankingBody.innerHTML="<tr><td colspan='7' style='color:red;font-weight:bold'>Error: "+error.message+"</td></tr>";
+console.error(error);
+}
+}
+
+window.startGame=startGame;
+window.playAgain=playAgain;
+window.loadRanking=loadRanking;
+
+loadRanking();
+</script>
+</body>
+</html>
